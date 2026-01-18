@@ -1,5 +1,5 @@
 
-# Sentinel (Logen) 🛡️
+# Sentinel (Logen)
 
 **A blazing fast, "Zero-Lag" log monitoring tool with a TUI, built in Rust.**
 
@@ -29,7 +29,7 @@ When running Sentinel, you get:
 - Automatic detection of JSON and plain-text errors
 - Optional webhook alerts when thresholds are exceeded
 
-## 🚀 Key Features
+## Key Features
 
 *   **Zero-Lag Architecture**: Decoupled log reading (Tokio) and UI rendering (Ratatui). Your UI never freezes, even at 100,000 lines/second.
 *   **Intelligent JSON Parsing**: Automatically detects `{"level": "error"}` or `{"severity": "panic"}` without complex regex configuration. Optimized with typed deserialization.
@@ -37,7 +37,7 @@ When running Sentinel, you get:
 *   **Robust Tailing**: Uses `linemux` to handle log rotation (logrotate) gracefully.
 *   **Visual Intelligence**: See error density over time with TUI Sparklines.
 
-## ⚡ Performance
+## Performance
 
 Sentinel is designed for speed.
 
@@ -47,16 +47,16 @@ Sentinel is designed for speed.
 | **State** | `AtomicU64` + Lock-Free Sampling | No Mutex contention on hot paths |
 | **IO** | `Tokio` Async + `Linemux` | Non-blocking file reading |
 
-## 📦 Installation
+## Installation
 
 ```bash
 # Clone and build
-git clone https://github.com/yourusername/sentinel-rs.git
+git clone https://github.com/d0wlet/sentinel-rs.git
 cd sentinel-rs
 cargo install --path .
 ```
 
-## 🎮 Usage
+## Usage
 
 ### 1. Zero-Config Simulation (Try it now!)
 Don't have a log file? Sentinel can simulate one for you to demonstrate its power.
@@ -76,7 +76,7 @@ Create a `config.yaml` to define your rules.
 
 `sentinel`
 
-## ⚙️ Configuration
+## Configuration
 
 Create a `config.yaml` file in the working directory:
 
