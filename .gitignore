@@ -3,5 +3,5 @@ target/
 test.log
 config.yaml
 ghb.txt
-README.md
+
 .gemini/

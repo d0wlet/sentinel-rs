@@ -49,7 +49,12 @@ async fn main() -> Result<()> {
             let mut counter = 0;
             loop {
                 counter += 1;
-                let log = if counter % 500 == 0 {
+                
+                // DEMO LOGIC: Burst errors at start (first 2000 lines) to show off Sparkline
+                // Then mixed traffic.
+                let log = if counter < 2000 && counter % 10 == 0 {
+                    format!("{{\"level\": \"error\", \"msg\": \"Initial Burst Error #{}\"}}\n", counter)
+                } else if counter % 500 == 0 {
                     format!("panic!: Kernel panic at main.rs:{}\n", counter)
                 } else if counter % 700 == 0 {
                     format!(
@@ -57,7 +62,7 @@ async fn main() -> Result<()> {
                         counter
                     )
                 } else {
-                    format!("[INFO] System healthy {}\n", counter)
+                     format!("[INFO] System healthy {}\n", counter)
                 };
 
                 let _ = file.write_all(log.as_bytes()).await;
