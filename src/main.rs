@@ -50,27 +50,37 @@ async fn main() -> Result<()> {
             loop {
                 counter += 1;
                 
-                // DEMO LOGIC: Burst errors at start (first 2000 lines) to show off Sparkline
-                // Then mixed traffic.
-                let log = if counter < 2000 && counter % 10 == 0 {
-                    format!("{{\"level\": \"error\", \"msg\": \"Initial Burst Error #{}\"}}\n", counter)
-                } else if counter % 500 == 0 {
-                    format!("panic!: Kernel panic at main.rs:{}\n", counter)
-                } else if counter % 700 == 0 {
-                    format!(
-                        "{{\"level\": \"error\", \"msg\": \"Critical usage {}\"}}\n",
-                        counter
-                    )
-                } else {
-                     format!("[INFO] System healthy {}\n", counter)
-                };
+                // DEMO LOGIC: "The Story Mode"
+                // Cycle through phases every 5 seconds (approx 1000 logs at 5ms delay)
+                let phase = (counter / 200) % 3; 
 
-                let _ = file.write_all(log.as_bytes()).await;
-                // High speed write
-                if counter % 100 == 0 {
-                    file.flush().await.unwrap();
-                    sleep(Duration::from_millis(1)).await;
-                }
+                let (log_text, delay_ms) = match phase {
+                    0 => ( // Phase 1: Normal Traffic (Happy Path)
+                        format!("[INFO] User login successful (Session #{})\n", counter),
+                        10 // Slow and steady
+                    ),
+                    1 => ( // Phase 2: Warning Signs (ramping up)
+                         if counter % 5 == 0 {
+                            format!("[WARN] High latency detected ({}ms)\n", counter % 100 + 100)
+                         } else {
+                            format!("[INFO] Processing request #{}\n", counter)
+                         },
+                         5 // Faster
+                    ),
+                    2 => ( // Phase 3: CRITICAL FAILURE (The Spike)
+                        if counter % 2 == 0 {
+                             format!("{{\"level\": \"error\", \"msg\": \"Database Connection Timeout #{}\"}}\n", counter)
+                        } else {
+                             format!("panic!: Kernel panic at main.rs:{}\n", counter)
+                        },
+                        2 // Full speed panic
+                    ),
+                    _ => (String::new(), 10),
+                };
+                
+                let _ = file.write_all(log_text.as_bytes()).await;
+                file.flush().await.unwrap();
+                sleep(Duration::from_millis(delay_ms)).await;
             }
         });
     } else {
