@@ -1,0 +1,23 @@
+# Sentinel (Logen) Configuration Example
+
+# How often to update the UI (in milliseconds)
+polling_interval_ms: 100
+
+# Webhook URL for Critical Alerts (Optional)
+# Supports Discord, Slack, etc. Sent as JSON POST.
+# webhook_url: "https://discord.com/api/webhooks/your-id/your-token"
+
+# Log Matching Rules
+# Patterns are treated as Regex.
+rules:
+  - name: "Database Error"
+    pattern: "(?i)database.*error"
+    threshold: 1
+
+  - name: "Critical Panic"
+    pattern: "panic!"
+    threshold: 1
+    
+  - name: "Payment Failure"
+    pattern: "payment.*failed"
+    threshold: 1
